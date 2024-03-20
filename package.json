@@ -1,0 +1,7 @@
+{
+  "name": "cpm-plugin-gs",
+  "private": true,
+  "workspaces": [
+    "plugin"
+  ]
+}
