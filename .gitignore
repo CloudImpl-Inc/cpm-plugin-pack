@@ -147,3 +147,6 @@ dist
 .idea
 ./out
 *.iml
+
+### cpm files
+.cpm/secrets.json

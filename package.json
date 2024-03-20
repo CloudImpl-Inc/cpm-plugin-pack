@@ -2,6 +2,20 @@
   "name": "cpm-plugin-gs",
   "private": true,
   "workspaces": [
-    "plugin"
-  ]
+    "clickup"
+  ],
+  "dependencies": {
+    "@cloudimpl-inc/cpm": "^2.7.0",
+    "axios": "^1.6.8",
+    "inquirer": "^9.2.16",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@cloudimpl-inc/cpm-clickup": "^1.0.0",
+    "@types/inquirer": "^9.0.7",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.11.28",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.2"
+  }
 }

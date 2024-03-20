@@ -1,7 +1,7 @@
 {
-  "name": "plugin-name",
+  "name": "@cloudimpl-inc/cpm-clickup",
   "version": "1.0.0",
-  "description": "plugin-description",
+  "description": "Clickup plugin for cpm",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -9,23 +9,18 @@
     "dist"
   ],
   "scripts": {
-    "build": "../node_modules/.bin/tsup"
+    "build": "tsup"
   },
   "keywords": [
     "cli",
     "cpm",
     "plugin"
   ],
-  "author": "plugin-arthur",
+  "author": "Randil Fernando",
   "license": "MIT",
   "repository": "plugin-repo",
   "homepage": "plugin-repo#readme",
   "dependencies": {
-    "@cloudimpl-inc/cpm": "^2.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.11.28",
-    "tsup": "^8.0.2",
-    "typescript": "^5.4.2"
+    "puppeteer": "^22.5.0"
   }
 }
