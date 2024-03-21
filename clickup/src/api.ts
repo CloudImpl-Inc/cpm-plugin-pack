@@ -12,25 +12,64 @@ interface Space {
     // Add other space properties as needed
 }
 
-interface Folder {
+interface List {
     id: string;
     name: string;
-    // Add other folder properties as needed
+    // Add other list properties as needed
 }
 
 interface Task {
     id: string;
     name: string;
     description: string;
+    status: {
+        id: string
+        status: string
+    }
     // Add other task properties as needed
+}
+
+interface User {
+    id: string;
+    username: string;
+    // Add other user properties as needed
+}
+
+interface TaskUpdate {
+    status: string;
+    // Add other fields you want to update as needed
 }
 
 export class ClickUpAPI {
     private apiKey: string;
+    private user: User | undefined;
     private apiUrl = 'https://api.clickup.com/api/v2/';
 
     constructor(apiKey: string) {
         this.apiKey = apiKey;
+    }
+
+    async getCurrentUser(): Promise<User> {
+        if (this.user) {
+            return this.user;
+        }
+
+        const url = `${this.apiUrl}user`;
+        const config: AxiosRequestConfig = {
+            headers: {
+                'Authorization': this.apiKey
+            }
+        };
+
+        try {
+            const response = await axios.get(url, config);
+            const u = response.data.user;
+            this.user = u;
+            return u;
+        } catch (error: any) {
+            console.error('Error getting current user:', error.response.data);
+            throw new Error('Failed to get current user');
+        }
     }
 
     async listWorkspaces(): Promise<Workspace[]> {
@@ -67,8 +106,8 @@ export class ClickUpAPI {
         }
     }
 
-    async listFolders(workspaceId: string): Promise<Folder[]> {
-        const url = `${this.apiUrl}team/${workspaceId}/folder`;
+    async getListsInSpace(spaceId: string): Promise<List[]> {
+        const url = `${this.apiUrl}space/${spaceId}/list`;
         const config: AxiosRequestConfig = {
             headers: {
                 'Authorization': this.apiKey
@@ -77,27 +116,33 @@ export class ClickUpAPI {
 
         try {
             const response = await axios.get(url, config);
-            return response.data.folders;
+            return response.data.lists;
         } catch (error: any) {
-            console.error('Error listing folders:', error.response.data);
-            throw new Error('Failed to list folders');
+            console.error('Error getting lists in space:', error.response.data);
+            throw new Error('Failed to get lists in space');
         }
     }
 
-    async listTasks(folderId: string): Promise<Task[]> {
-        const url = `${this.apiUrl}folder/${folderId}/task`;
+    async getTasksInList(listId: string, assignee?: string): Promise<Task[]> {
+        let url = `${this.apiUrl}list/${listId}/task`;
+
+        const params = (assignee)
+            ? {assignees: [assignee]}
+            : {}
+
         const config: AxiosRequestConfig = {
             headers: {
                 'Authorization': this.apiKey
-            }
+            },
+            params: params
         };
 
         try {
             const response = await axios.get(url, config);
             return response.data.tasks;
         } catch (error: any) {
-            console.error('Error listing tasks:', error.response.data);
-            throw new Error('Failed to list tasks');
+            console.error('Error getting tasks in list:', error.response.data);
+            throw new Error('Failed to get tasks in list');
         }
     }
 
@@ -118,9 +163,8 @@ export class ClickUpAPI {
         }
     }
 
-    async updateTaskStatus(taskId: string, status: string): Promise<void> {
-        const url = `${this.apiUrl}task/${taskId}/status`;
-        const data = { status };
+    async updateTask(taskId: string, update: TaskUpdate): Promise<void> {
+        const url = `${this.apiUrl}task/${taskId}`;
         const config: AxiosRequestConfig = {
             headers: {
                 'Authorization': this.apiKey,
@@ -129,7 +173,7 @@ export class ClickUpAPI {
         };
 
         try {
-            await axios.put(url, data, config);
+            await axios.put(url, update, config);
         } catch (error: any) {
             console.error('Error updating task status:', error.response.data);
             throw new Error('Failed to update task status');

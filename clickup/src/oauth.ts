@@ -28,12 +28,15 @@ async function startServerAndWaitForCode(clientId: string) {
                     res.end('Failed to retrieve authorization code.');
                     reject(new Error('Failed to retrieve authorization code.'));
                 }
-
-                server.close(); // Close the server after handling the request
+            } else if (req.url && req.url.startsWith('/favicon.ico')) {
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
+                res.end('404 - Not Found');
             } else {
                 res.end('Invalid callback URL.');
                 reject(new Error('Invalid callback URL.'));
             }
+
+            server.close();
         });
 
         server.listen(3000, () => {

@@ -5,13 +5,15 @@
     "clickup"
   ],
   "dependencies": {
-    "@cloudimpl-inc/cpm": "^2.7.0",
+    "@cloudimpl-inc/cpm": "^2.8.0",
     "axios": "^1.6.8",
+    "cli-table": "^0.3.11",
     "inquirer": "^9.2.16",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@cloudimpl-inc/cpm-clickup": "^1.0.0",
+    "@types/cli-table": "^0.3.4",
     "@types/inquirer": "^9.0.7",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.11.28",
