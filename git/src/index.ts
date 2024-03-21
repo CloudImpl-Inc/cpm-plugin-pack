@@ -1,7 +1,7 @@
 import { CPMContext, ActionInput, ActionOutput, CPMPlugin } from '@cloudimpl-inc/cpm';
 import * as path from 'path';
 import * as fs from 'fs';
-import {executeShellCommand} from "@cloudimpl-inc/cpm/dist/util";
+import {executeShellCommand} from '@cloudimpl-inc/cpm/dist/util';
 
 const gitPlugin: CPMPlugin = {
     name: 'git',
