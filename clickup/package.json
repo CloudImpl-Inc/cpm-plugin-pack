@@ -18,8 +18,8 @@
   ],
   "author": "Randil Fernando",
   "license": "MIT",
-  "repository": "plugin-repo",
-  "homepage": "plugin-repo#readme",
+  "repository": "https://github.com/CloudImpl-Inc/cpm-plugin-pack",
+  "homepage": "https://github.com/CloudImpl-Inc/cpm-plugin-pack#readme",
   "dependencies": {
     "puppeteer": "^22.5.0"
   }
