@@ -1,11 +1,33 @@
-import { CPMContext, ActionInput, ActionOutput, CPMPlugin } from '@cloudimpl-inc/cpm';
+import {CPMContext, ActionInput, ActionOutput, CPMPlugin, Action} from '@cloudimpl-inc/cpm';
 import * as path from 'path';
 import * as fs from 'fs';
 import {executeShellCommand} from '@cloudimpl-inc/cpm/dist/util';
+import inquirer from "inquirer";
+import prompt = inquirer.prompt;
+
+const configure: Action = async (ctx, input) => {
+    const answers: { input: string } = await prompt([
+        {
+            type: 'input',
+            name: 'input',
+            message: 'Enter default branch:'
+        }
+    ]);
+
+    ctx.variables.defaultBranch = answers.input;
+
+    return {};
+}
 
 const gitPlugin: CPMPlugin = {
     name: 'git',
+    commands: {
+        'configure': {
+            description: 'configure git plugin (only support interactive mode)'
+        }
+    },
     actions: {
+        'git configure': configure,
         'repo clone': async (ctx: CPMContext, input: ActionInput): Promise<ActionOutput> => {
             const { url } = input.args;
             try {
@@ -36,7 +58,9 @@ const gitPlugin: CPMPlugin = {
 
             try {
                 // @ts-ignore
-                await executeShellCommand(`git fetch && git checkout -b ${branchNameSanitized} || git checkout ${branchNameSanitized}`);
+                const defaultBranch = ctx.variables.defaultBranch;
+                await executeShellCommand(`git checkout ${defaultBranch} && git pull && 
+                git fetch && git checkout -b ${branchNameSanitized} || git checkout ${branchNameSanitized}`);
                 console.log(`Checked out branch ${branchNameSanitized}`);
                 return {};
             } catch (error: any) {
