@@ -1,26 +1,17 @@
-# cpm plugin getting started
-This is a template repository to start implement cpm plugin
+# cpm plugin pack
+This repository contain plugins for cpm
 
-## Setup repository
-- Create a new repository with this template
-- Clone created repository
-- Open `./plugin/package.json`
-- Replace `"name": "plugin-name",` with plugin name
-- Replace `"description": "plugin-description",` with plugin description
-- Replace `"author": "plugin-arthur",` with plugin arthur name
-- Replace `"repository": "plugin-repo",` with created plugin repository url
-- Replace `"homepage": "plugin-repo#readme",` with created plugin repository url
-- Open `./cpm.yml`
-- Replace `plugin-name` with plugin name
+## Plugins available
+- Clickup
+- Git
 
-## Start development
-- Open `./plugin/src/index.ts` with your favourite code editor
-- Change `name: 'plugin-name',` with display name for plugin cpm cli use this name if you are exporting custom commands
-- `actions: {}` object contains all the actions provided by plugin
-- Key should mention the cpm command which this action handles (ex: `task ls`, `task get`, `repo clone`)
-- You can view command syntax by running help command in cpm cli
-- `ctx` will contain config (`./cpm.yml`) and secrets store (which you can use to get or store new secrets for plugin)
-- `input` will contain all the arguments and options passed for command (according to the command syntax)
+## Clickup plugin available commands
+- cpm task list
+- cpm task get
+- cpm task status
+
+## Git plugin available commands
+- cpm 
 
 ## Test locally
 - Run `cpm` inside plugin repository (it should load plugin)
