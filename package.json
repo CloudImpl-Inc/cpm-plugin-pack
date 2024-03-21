@@ -2,7 +2,8 @@
   "name": "cpm-plugin-gs",
   "private": true,
   "workspaces": [
-    "clickup"
+    "clickup",
+    "git"
   ],
   "dependencies": {
     "@cloudimpl-inc/cpm": "^2.8.0",
@@ -12,7 +13,6 @@
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "@cloudimpl-inc/cpm-clickup": "^1.0.0",
     "@types/cli-table": "^0.3.4",
     "@types/inquirer": "^9.0.7",
     "@types/jsonwebtoken": "^9.0.6",

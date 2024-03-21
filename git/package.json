@@ -1,0 +1,26 @@
+{
+  "name": "@cloudimpl-inc/cpm-git",
+  "version": "1.0.0",
+  "description": "Git plugin for cpm",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "keywords": [
+    "cli",
+    "cpm",
+    "plugin"
+  ],
+  "author": "Randil Fernando",
+  "license": "MIT",
+  "repository": "plugin-repo",
+  "homepage": "plugin-repo#readme",
+  "dependencies": {
+    "puppeteer": "^22.5.0"
+  }
+}
