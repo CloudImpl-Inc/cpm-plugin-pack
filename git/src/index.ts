@@ -30,10 +30,14 @@ const gitPlugin: CPMPlugin = {
         },
         'repo checkout': async (ctx: CPMContext, input: ActionInput): Promise<ActionOutput> => {
             const { branch } = input.options;
+            const branchNameSanitized = branch.replace(/ /g, '-');
+
+            console.log(branchNameSanitized);
+
             try {
                 // @ts-ignore
-                await executeShellCommand(`git fetch && git checkout -b ${branch} || git checkout ${branch}`);
-                console.log(`Checked out branch ${branch}`);
+                await executeShellCommand(`git fetch && git checkout -b ${branchNameSanitized} || git checkout ${branchNameSanitized}`);
+                console.log(`Checked out branch ${branchNameSanitized}`);
                 return {};
             } catch (error: any) {
                 console.error('Error checking out branch:', error.message);
