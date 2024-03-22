@@ -92,12 +92,12 @@ const flowCheckout: Action = async (ctx, input) => {
     const {taskId} = input.args;
 
     const defaultBranch = ctx.variables.defaultBranch;
-    let {output: currentBranch} = await executeShellCommand('git symbolic-ref --short HEAD');
-    currentBranch = currentBranch.split('\n')[0].trim();
+    const {output: currentBranch} = await executeShellCommand('git symbolic-ref --short HEAD');
+    const {output: statusOutput} = await executeShellCommand('git status -s');
 
     const {result: task} = await executeShellCommand(`cpm task get ${taskId}`);
     const parts = task.title.split(' ');
-    const titleTrimmed = parts.slice(0, Math.min(4, parts.length)).join('-');
+    const titleTrimmed = parts.slice(0, Math.min(parts.length, 4)).join('-');
     const branchName = `feature/TASK-${task.id}-${titleTrimmed}`;
 
     if (currentBranch === branchName) {
@@ -117,6 +117,11 @@ const flowCheckout: Action = async (ctx, input) => {
 
     if (task.status === taskStatus.ACCEPTED || task.status === taskStatus.CLOSED) {
         console.log(chalk.yellow('Task already completed'));
+        return {};
+    }
+
+    if (statusOutput && statusOutput !== '') {
+        console.log(chalk.red('Branch has pending changes, please commit them'));
         return {};
     }
 
