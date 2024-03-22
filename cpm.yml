@@ -1,3 +1,17 @@
 plugins:
   - '@cloudimpl-inc/cpm-clickup'
   - '@cloudimpl-inc/cpm-git'
+
+workflows:
+  setup-repo:
+    steps:
+      - id: sync-cpm
+        run: cpm sync
+  checkout-task:
+    inputs:
+      - taskId
+    steps:
+      - id: get-task
+        run: cpm task get {{inputs.taskId}}
+      - id: checkout-branch
+        run: cpm repo checkout --branch 'feature/CU-{{get-task.outputs.id}}-{{get-task.outputs.title}}'

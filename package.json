@@ -3,10 +3,11 @@
   "private": true,
   "workspaces": [
     "clickup",
-    "git"
+    "git",
+    "exec"
   ],
   "dependencies": {
-    "@cloudimpl-inc/cpm": "^2.9.4",
+    "@cloudimpl-inc/cpm": "file:/Users/randilfernando/Projects/cpm",
     "axios": "^1.6.8",
     "cli-table": "^0.3.11",
     "inquirer": "^9.2.16",
