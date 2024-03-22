@@ -90,10 +90,10 @@ const flowSetup: Action = async (ctx, input) => {
 const flowCheckout: Action = async (ctx, input) => {
     const {taskId} = input.args;
 
-    const {result: task} = await executeShellCommand(`cpm task get ${taskId}`);
     const defaultBranch = ctx.variables.defaultBranch;
-
     const {output: currentBranch} = await executeShellCommand('git symbolic-ref --short HEAD');
+
+    const {result: task} = await executeShellCommand(`cpm task get ${taskId}`);
     const titleTrimmed = task.title.split(' ').splice(4).join('-');
     const branchName = `feature/TASK-${task.id}-${titleTrimmed}`;
 
@@ -134,17 +134,28 @@ const flowCheckout: Action = async (ctx, input) => {
 const flowSubmit: Action = async (ctx, input) => {
     const defaultBranch = ctx.variables.defaultBranch;
     const {output: branchName} = await executeShellCommand('git symbolic-ref --short HEAD');
-    const taskId = branchName.split('/')[1].split('-')[1];
+    const {output: statusOutput} = await executeShellCommand('git status -s');
 
+    if (!branchName.startsWith('feature/TASK')) {
+        console.log('not a feature branch');
+        return {};
+    }
+
+    if (statusOutput && statusOutput !== '') {
+        console.log('branch has pending changes, please commit them');
+        return {};
+    }
+
+    const taskId = branchName.split('/')[1].split('-')[1];
     const {result: task} = await executeShellCommand(`cpm task get ${taskId}`);
 
     if (task.status === taskStatus.IN_PROGRESS) {
-        await executeShellCommand(`cpm task status ${taskId} in-review`)
-    } else {
-
+        await executeShellCommand(`git push origin ${branchName}`);
+        await executeShellCommand(`cpm task status ${taskId} '${taskStatus.IN_REVIEW}'`)
+        await executeShellCommand(`cpm pr create ${branchName} ${defaultBranch}`);
+    } else if (task.status === taskStatus.IN_REVIEW) {
+        await executeShellCommand(`git push origin ${branchName}`);
     }
-
-    await executeShellCommand(`cpm pr create ${branchName} ${defaultBranch}`);
 
     return {};
 }
