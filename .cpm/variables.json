@@ -1,0 +1,12 @@
+{
+    "plugin:@cloudimpl-inc/cpm-clickup": {
+        "workspaceId": "9002194760",
+        "spaceId": "90180522939",
+        "listId": "901801020805"
+    },
+    "plugin:@cloudimpl-inc/cpm-git": {},
+    "plugin:cpm/root": {},
+    "workflow:setup-repo": {},
+    "workflow:checkout-task": {},
+    "plugin:@cloudimpl-inc/cpm-root": {}
+}
