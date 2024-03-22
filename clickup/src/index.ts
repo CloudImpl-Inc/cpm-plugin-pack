@@ -105,7 +105,7 @@ const getTask: Action = async (ctx, input) => {
     table.push([task.id, task.name, task.status.status]);
     console.log(table.toString());
 
-    return {id: task.id, title: task.name};
+    return {id: task.id, title: task.name, status: task.status.status};
 };
 
 const updateTaskStatus: Action = async (ctx, input) => {
