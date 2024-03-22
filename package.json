@@ -7,8 +7,9 @@
     "github"
   ],
   "dependencies": {
-    "@cloudimpl-inc/cpm": "^2.13.1",
+    "@cloudimpl-inc/cpm": "^2.13.2",
     "axios": "^1.6.8",
+    "chalk": "^5.3.0",
     "cli-table": "^0.3.11",
     "inquirer": "^9.2.16",
     "jsonwebtoken": "^9.0.2"

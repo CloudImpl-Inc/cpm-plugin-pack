@@ -5,6 +5,7 @@ import inquirer from "inquirer";
 import prompt = inquirer.prompt;
 import prepareCommitMsg from "./git-hooks/prepare-commit-msg";
 import {cwd, executeShellCommand} from "@cloudimpl-inc/cpm/dist/util";
+import chalk from 'chalk';
 
 const taskStatus = {
     OPEN: 'Open',
@@ -26,14 +27,14 @@ const clone = async (ctx: CPMContext, input: ActionInput): Promise<ActionOutput>
 
         // Check if the repository is already cloned
         if (fs.existsSync(repoDir)) {
-            console.log(`Repository already exists at ${repoDir}. Skipping clone step.`);
+            console.log(chalk.yellow(`Repository already exists at ${repoDir}. Skipping clone step.`));
             return {org, repo, path: repoDir};
         }
 
         // Clone the repository
         // @ts-ignore
         await executeShellCommand(`git clone ${url} ${repoDir}`);
-        console.log(`Repository cloned successfully to ${repoDir}`);
+        console.log(chalk.green(`Repository cloned successfully to ${repoDir}`));
         return {org, repo, path: repoDir};
     } catch (error: any) {
         console.error('Error cloning repository:', error.message);
@@ -49,7 +50,7 @@ const checkout = async (ctx: CPMContext, input: ActionInput): Promise<ActionOutp
 
     try {
         await executeShellCommand(`git fetch && git checkout -b ${branchNameSanitized} || git checkout ${branchNameSanitized}`);
-        console.log(`Checked out branch ${branchNameSanitized}`);
+        console.log(chalk.green(`Checked out branch ${branchNameSanitized}`));
         return {};
     } catch (error: any) {
         console.error('Error checking out branch:', error.message);
@@ -100,22 +101,22 @@ const flowCheckout: Action = async (ctx, input) => {
     const branchName = `feature/TASK-${task.id}-${titleTrimmed}`;
 
     if (currentBranch === branchName) {
-        console.log('already on task branch');
+        console.log(chalk.green('Already on task branch'));
         return {};
     }
 
     if (task.status === taskStatus.OPEN) {
-        console.log('please assign task and change status to pending');
+        console.log(chalk.yellow('Please assign task and change status to pending'));
         return {};
     }
 
     if (task.status === taskStatus.BLOCKED) {
-        console.log('task is blocked please unblock it first');
+        console.log(chalk.yellow('Task is blocked please unblock it first'));
         return {};
     }
 
     if (task.status === taskStatus.ACCEPTED || task.status === taskStatus.CLOSED) {
-        console.log('task already completed');
+        console.log(chalk.yellow('Task already completed'));
         return {};
     }
 
@@ -139,12 +140,12 @@ const flowSubmit: Action = async (ctx, input) => {
     const {output: statusOutput} = await executeShellCommand('git status -s');
 
     if (!branchName.startsWith('feature/TASK')) {
-        console.log('not a feature branch');
+        console.log(chalk.red('Not a feature branch'));
         return {};
     }
 
     if (statusOutput && statusOutput !== '') {
-        console.log('branch has pending changes, please commit them');
+        console.log(chalk.red('Branch has pending changes, please commit them'));
         return {};
     }
 
