@@ -6,6 +6,7 @@ import prompt = inquirer.prompt;
 import prepareCommitMsg from "./git-hooks/prepare-commit-msg";
 import {cwd, executeShellCommand} from "@cloudimpl-inc/cpm/dist/util";
 import chalk from 'chalk';
+import {execSync} from "child_process";
 
 const taskStatus = {
     OPEN: 'Open',
@@ -104,8 +105,9 @@ const flowCheckout: Action = async (ctx, input) => {
     const {taskId} = input.args;
 
     const defaultBranch = ctx.variables.defaultBranch;
-    const {output: currentBranch} = await executeShellCommand('git symbolic-ref --short HEAD');
-    const {output: statusOutput} = await executeShellCommand('git status -s');
+    let currentBranch = execSync('git symbolic-ref --short HEAD').toString();
+    currentBranch = currentBranch.split('\n')[0];
+    const statusOutput = execSync('git status -s').toString();
 
     const {result: task} = await executeShellCommand(`cpm task get ${taskId}`);
     const parts = task.title.split(' ');
@@ -153,9 +155,9 @@ const flowCheckout: Action = async (ctx, input) => {
 
 const flowSubmit: Action = async (ctx, input) => {
     const defaultBranch = ctx.variables.defaultBranch;
-    let {output: branchName} = await executeShellCommand('git symbolic-ref --short HEAD');
+    let branchName = execSync('git symbolic-ref --short HEAD').toString();
     branchName = branchName.split('\n')[0];
-    const {output: statusOutput} = await executeShellCommand('git status -s');
+    const statusOutput = execSync('git status -s').toString();
 
     if (!branchName.startsWith('feature/TASK')) {
         console.log(chalk.red('Not a feature branch'));
