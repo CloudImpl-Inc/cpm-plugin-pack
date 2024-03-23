@@ -1,7 +1,6 @@
 {
   "devDependencies": {
-    "@cloudimpl-inc/cpm-clickup": "file:../clickup",
-    "@cloudimpl-inc/cpm-git": "file:../git",
-    "@cloudimpl-inc/cpm-github": "file:../github"
+    "@cloudimpl-inc/cpm-clickup": "^1.3.0",
+    "@cloudimpl-inc/cpm-github": "^1.2.0"
   }
 }
