@@ -2,6 +2,7 @@
   "name": "@cloudimpl-inc/cpm-git",
   "version": "1.9.0",
   "description": "Git plugin for cpm",
+  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
