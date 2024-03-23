@@ -88,6 +88,18 @@ const flowSetup: Action = async (ctx, input) => {
     return {};
 }
 
+const flowSelect: Action = async (ctx, input) => {
+    const {result: task} = await executeShellCommand('cpm task select -a');
+
+    if (!task.id || task.id === '') {
+        console.log(chalk.red('not task selected'));
+        return {};
+    } else {
+        await executeShellCommand(`cpm flow checkout ${task.id}`);
+        return {};
+    }
+}
+
 const flowCheckout: Action = async (ctx, input) => {
     const {taskId} = input.args;
 
@@ -176,6 +188,7 @@ const gitPlugin: CPMPlugin = {
         'repo checkout': checkout,
         'flow configure': flowConfigure,
         'flow setup': flowSetup,
+        'flow select': flowSelect,
         'flow checkout': flowCheckout,
         'flow submit': flowSubmit
     }

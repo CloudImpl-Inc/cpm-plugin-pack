@@ -1,4 +1,4 @@
-import {Action, CPMContext, CPMPluginCreator} from '@cloudimpl-inc/cpm';
+import {Action, ActionInput, ActionOutput, CPMContext, CPMPluginCreator} from '@cloudimpl-inc/cpm';
 import {authCodeLogin} from "./oauth";
 import {ClickUpAPI} from "./api";
 import inquirer from "inquirer";
@@ -63,7 +63,7 @@ const configure: Action = async (ctx, input) => {
     return {};
 }
 
-const listTasks: Action = async (ctx, input) => {
+const getTasks = async (ctx: CPMContext, input: ActionInput) => {
     await loginIfNot(ctx);
 
     const api = new ClickUpAPI(ctx.secrets.token);
@@ -75,6 +75,12 @@ const listTasks: Action = async (ctx, input) => {
     } else {
         tasks = await api.getTasksInList(ctx.variables.listId);
     }
+
+    return tasks;
+}
+
+const listTasks: Action = async (ctx, input) => {
+    const tasks = await getTasks(ctx, input);
 
     const table = new Table({
         head: ['ID', 'Title', 'Status'],
@@ -108,6 +114,24 @@ const getTask: Action = async (ctx, input) => {
     return {id: task.id, title: task.name, status: task.status.status};
 };
 
+const selectTask: Action = async (ctx, input): Promise<ActionOutput> => {
+    const tasks = await getTasks(ctx, input);
+    const taskId = await getSelection('Select task:', tasks);
+    const task = tasks.find(t => t.id === taskId);
+
+    if (!task) {
+        return {};
+    }
+
+    const table = new Table({
+        head: ['ID', 'Title', 'Status'],
+        colWidths: [20, 40, 20]
+    });
+    table.push([task.id, task.name, task.status.status]);
+    console.log(table.toString());
+    return {id: task.id, title: task.name, status: task.status.status};
+};
+
 const updateTaskStatus: Action = async (ctx, input) => {
     await loginIfNot(ctx);
 
@@ -126,14 +150,11 @@ const updateTaskStatus: Action = async (ctx, input) => {
 const createTaskPlugin: CPMPluginCreator = async (ctx) => {
     return {
         name: 'clickup',
-        commands: {
-            'configure': {
-                description: 'configure clickup plugin (only support interactive mode)'
-            }
-        },
+        configure: configure,
         actions: {
             'clickup configure': configure,
             'task list': listTasks,
+            'task select': selectTask,
             'task get': getTask,
             'task status': updateTaskStatus
         }
