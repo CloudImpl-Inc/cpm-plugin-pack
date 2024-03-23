@@ -1,7 +1,6 @@
 {
   "name": "cpm-plugin-gs",
   "private": true,
-  "type": "module",
   "workspaces": [
     "clickup",
     "git",

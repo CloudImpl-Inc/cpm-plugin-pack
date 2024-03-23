@@ -1,4 +1,7 @@
 {
     "plugin:flow": {},
-    "plugin:@cloudimpl-inc/cpm-root": {}
+    "plugin:@cloudimpl-inc/cpm-root": {},
+    "plugin:@cloudimpl-inc/cpm-github": {},
+    "plugin:@cloudimpl-inc/cpm-git": {},
+    "plugin:@cloudimpl-inc/cpm-clickup": {}
 }

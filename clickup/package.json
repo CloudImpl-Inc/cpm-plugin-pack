@@ -2,7 +2,6 @@
   "name": "@cloudimpl-inc/cpm-clickup",
   "version": "1.3.0",
   "description": "Clickup plugin for cpm",
-  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
