@@ -102,7 +102,13 @@ const flowSelect: Action = async (ctx, input) => {
 }
 
 const flowCheckout: Action = async (ctx, input) => {
-    const {taskId} = input.args;
+    let taskId;
+    if (input.options.taskId) {
+        taskId = input.options.taskId;
+    } else {
+        const {result: task} = await executeShellCommand('cpm task select');
+        taskId = task.id;
+    }
 
     const defaultBranch = ctx.variables.defaultBranch;
     let currentBranch = execSync('git symbolic-ref --short HEAD').toString();
@@ -190,7 +196,6 @@ const gitPlugin: CPMPlugin = {
         'repo checkout': checkout,
         'flow configure': flowConfigure,
         'flow setup': flowSetup,
-        'flow select': flowSelect,
         'flow checkout': flowCheckout,
         'flow submit': flowSubmit
     }
