@@ -1,3 +1,8 @@
 plugins:
-  - '@cloudimpl-inc/cpm-clickup'
+  - '@cloudimpl-inc/cpm-git'
   - '@cloudimpl-inc/cpm-github'
+  - '@cloudimpl-inc/cpm-clickup'
+flow:
+  enabled: true
+  defaultBranch: main
+  productionBranch: prod
