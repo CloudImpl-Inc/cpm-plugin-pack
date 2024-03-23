@@ -1,6 +1,7 @@
 plugins:
   - '@cloudimpl-inc/cpm-clickup'
   - '@cloudimpl-inc/cpm-git'
+  - '@cloudimpl-inc/cpm-github'
 
 workflows:
   setup-repo:

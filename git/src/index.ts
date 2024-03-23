@@ -91,10 +91,12 @@ const flowCheckout: Action = async (ctx, input) => {
     const {taskId} = input.args;
 
     const defaultBranch = ctx.variables.defaultBranch;
-    const {output: currentBranch} = await executeShellCommand('git symbolic-ref --short HEAD');
+    let {output: currentBranch} = await executeShellCommand('git symbolic-ref --short HEAD');
+    currentBranch = currentBranch.split('\n')[0].trim();
 
     const {result: task} = await executeShellCommand(`cpm task get ${taskId}`);
-    const titleTrimmed = task.title.split(' ').splice(4).join('-');
+    const parts = task.title.split(' ');
+    const titleTrimmed = parts.slice(0, Math.min(4, parts.length)).join('-');
     const branchName = `feature/TASK-${task.id}-${titleTrimmed}`;
 
     if (currentBranch === branchName) {

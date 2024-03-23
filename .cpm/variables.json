@@ -11,5 +11,6 @@
     "plugin:cpm/root": {},
     "workflow:setup-repo": {},
     "workflow:checkout-task": {},
-    "plugin:@cloudimpl-inc/cpm-root": {}
+    "plugin:@cloudimpl-inc/cpm-root": {},
+    "plugin:@cloudimpl-inc/cpm-github": {}
 }

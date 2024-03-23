@@ -4,7 +4,7 @@
   "workspaces": [
     "clickup",
     "git",
-    "exec"
+    "github"
   ],
   "dependencies": {
     "@cloudimpl-inc/cpm": "^2.13.1",
