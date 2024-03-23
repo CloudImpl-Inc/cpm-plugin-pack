@@ -141,7 +141,8 @@ const flowCheckout: Action = async (ctx, input) => {
 
 const flowSubmit: Action = async (ctx, input) => {
     const defaultBranch = ctx.variables.defaultBranch;
-    const {output: branchName} = await executeShellCommand('git symbolic-ref --short HEAD');
+    let {output: branchName} = await executeShellCommand('git symbolic-ref --short HEAD');
+    branchName = branchName.split('\n')[0];
     const {output: statusOutput} = await executeShellCommand('git status -s');
 
     if (!branchName.startsWith('feature/TASK')) {
