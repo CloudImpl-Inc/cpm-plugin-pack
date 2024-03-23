@@ -4,6 +4,7 @@ This repository contain plugins for cpm
 ## Plugins available
 - Clickup
 - Git
+- Github
 
 ## Clickup plugin available commands
 - cpm task list
