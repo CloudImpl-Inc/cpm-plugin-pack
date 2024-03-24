@@ -2,9 +2,9 @@
 This repository contain plugins for cpm
 
 ## Plugins available
-- [Git](git)
-- [Github](github)
-- [Clickup](clickup)
+- [Git](git#readme)
+- [Github](github#readme)
+- [Clickup](clickup#readme)
 
 ## Use plugin
 - Go to repository where you need to install plugin
