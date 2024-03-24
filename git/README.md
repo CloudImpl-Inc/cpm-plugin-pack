@@ -1,11 +1,13 @@
-# CPM plugin for clickup
+# CPM plugin for git
 
 ## Supported commands
 - cpm repo clone
 - cpm repo checkout
+- cpm repo sync
+- cpm repo info
 
-## Use plugin
-- This plugin need to install globally
-- Run `cpm plugin add @cloudimpl-inc/cpm-git -g`
+## Add plugin
+1. We recommend adding this plugin globally (Otherwise cant use cpm repo clone command)
+2. Run `cpm plugin add -g @cloudimpl-inc/cpm-git`
 
 >Happy Coding ;)

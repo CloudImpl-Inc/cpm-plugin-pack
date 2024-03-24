@@ -2,6 +2,7 @@
   "devDependencies": {
     "@cloudimpl-inc/cpm-clickup": "file:../clickup",
     "@cloudimpl-inc/cpm-git": "file:../git",
-    "@cloudimpl-inc/cpm-github": "file:../github"
+    "@cloudimpl-inc/cpm-github": "file:../github",
+    "@cloudimpl-inc/cpm-jira": "file:../jira"
   }
 }

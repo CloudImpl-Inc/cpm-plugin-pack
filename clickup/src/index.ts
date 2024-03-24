@@ -5,9 +5,6 @@ import inquirer from "inquirer";
 import prompt = inquirer.prompt;
 import Table from "cli-table";
 
-const clientId = '2E9QXSC2MT3MNRCKAJR9RLHSJJQXZ52Y';
-const clientSecret = '9M9H9EUPR3IZW7YNSR6PV0FK7PYV67LG2W365Z9WAWISWXKIQFVOS7O7RIECOHV1';
-
 const getSelection = async (message: string, list: { id: string, name: string }[]) => {
     const options: string[] = [];
     const idMapping: Record<string, string> = {};
@@ -27,6 +24,24 @@ const getSelection = async (message: string, list: { id: string, name: string }[
     ]);
 
     return idMapping[answers.selection];
+}
+
+const getClientCredential = async (): Promise<{
+    clientId: string,
+    clientSecret: string
+}> => {
+    return prompt([
+        {
+            type: 'input',
+            name: 'clientId',
+            message: 'Enter client id:'
+        },
+        {
+            type: 'input',
+            name: 'clientSecret',
+            message: 'Enter client secret:'
+        }
+    ]);
 }
 
 const selectWorkspace = async (ctx: CPMContext) => {
@@ -49,11 +64,17 @@ const selectList = async (ctx: CPMContext, spaceId: string) => {
 
 const loginIfNot = async (ctx: CPMContext) => {
     if (!ctx.secrets.token) {
+        const clientId = ctx.variables.clientId;
+        const clientSecret = ctx.variables.clientSecret;
         ctx.secrets.token = await authCodeLogin(clientId, clientSecret);
     }
 }
 
 const configure: Action = async (ctx, input) => {
+    const clientCred = await getClientCredential();
+    ctx.variables.clientId = clientCred.clientId;
+    ctx.variables.clientSecret = clientCred.clientSecret;
+
     await loginIfNot(ctx);
 
     ctx.variables.workspaceId = await selectWorkspace(ctx);

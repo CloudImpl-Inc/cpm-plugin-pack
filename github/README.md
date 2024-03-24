@@ -3,7 +3,8 @@
 ## Supported commands
 - cpm pr create
 
-## Use plugin
-- Run `cpm plugin add @cloudimpl-inc/cpm-github`
+## Add plugin
+1. Go to repository where you need to install plugin
+2. Run `cpm plugin add @cloudimpl-inc/cpm-github`
 
 >Happy Coding ;)
