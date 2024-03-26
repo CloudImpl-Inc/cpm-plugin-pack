@@ -4,6 +4,7 @@ import {ClickUpAPI} from "./api";
 import inquirer from "inquirer";
 import prompt = inquirer.prompt;
 import Table from "cli-table";
+import chalk from "chalk";
 
 const getSelection = async (message: string, list: { id: string, name: string }[]) => {
     const options: string[] = [];
@@ -71,8 +72,11 @@ const loginIfNot = async (ctx: CPMContext) => {
 }
 
 const configure: Action = async (ctx, input) => {
-    const readmeUrl = 'https://cloudimpl-inc.github.io/cpm-plugin-pack/clickup/#readme';
-    console.log(`You can find plugin configure guide here: ${readmeUrl}`);
+    const readmeUrl = 'https://help.clickup.com/hc/en-us/articles/6303422883095-Create-your-own-app-with-the-ClickUp-API';
+    const callbackUrl = 'http://localhost:3000/callback';
+
+    console.log(`To connect with ClickUp, follow guide at ${readmeUrl} to create OAuth app`);
+    console.log(`Use ${chalk.blue(callbackUrl)} as the callback url when creating oauth app`)
 
     const clientCred = await getClientCredential();
     ctx.variables.clientId = clientCred.clientId;
@@ -176,7 +180,6 @@ const createTaskPlugin: CPMPluginCreator = async (ctx) => {
         name: 'clickup',
         configure: configure,
         actions: {
-            'clickup configure': configure,
             'task list': listTasks,
             'task select': selectTask,
             'task get': getTask,
