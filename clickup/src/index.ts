@@ -82,6 +82,7 @@ const configure: Action = async (ctx, input) => {
     ctx.variables.clientId = clientCred.clientId;
     ctx.variables.clientSecret = clientCred.clientSecret;
 
+    delete ctx.secrets.token
     await loginIfNot(ctx);
 
     ctx.variables.workspaceId = await selectWorkspace(ctx);
