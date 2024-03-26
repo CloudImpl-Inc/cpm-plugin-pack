@@ -149,5 +149,5 @@ dist
 *.iml
 
 ### cpm files
-.cpm/secrets.json
-.cpm/output.txt
+.cpm
+cpm.yml

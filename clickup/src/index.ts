@@ -71,6 +71,9 @@ const loginIfNot = async (ctx: CPMContext) => {
 }
 
 const configure: Action = async (ctx, input) => {
+    const readmeUrl = 'https://cloudimpl-inc.github.io/cpm-plugin-pack/clickup/#readme';
+    console.log(`You can find plugin configure guide here: ${readmeUrl}`);
+
     const clientCred = await getClientCredential();
     ctx.variables.clientId = clientCred.clientId;
     ctx.variables.clientSecret = clientCred.clientSecret;
