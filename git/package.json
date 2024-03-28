@@ -1,6 +1,6 @@
 {
   "name": "@cloudimpl-inc/cpm-git",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Git plugin for cpm",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

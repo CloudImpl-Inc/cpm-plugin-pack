@@ -46,28 +46,29 @@ const getClientCredential = async (): Promise<{
 }
 
 const selectWorkspace = async (ctx: CPMContext) => {
-    const api = new ClickUpAPI(ctx.secrets.token);
+    const api = new ClickUpAPI(ctx.secrets.get('token'));
     const workspaces = await api.listWorkspaces();
     return await getSelection('Select team:', workspaces);
 }
 
 const selectSpace = async (ctx: CPMContext, teamId: string) => {
-    const api = new ClickUpAPI(ctx.secrets.token);
+    const api = new ClickUpAPI(ctx.secrets.get('token'));
     const spaces = await api.listSpacesInWorkspace(teamId);
     return await getSelection('Select space:', spaces);
 }
 
 const selectList = async (ctx: CPMContext, spaceId: string) => {
-    const api = new ClickUpAPI(ctx.secrets.token);
+    const api = new ClickUpAPI(ctx.secrets.get('token'));
     const lists = await api.getListsInSpace(spaceId);
     return await getSelection('Select list:', lists);
 }
 
 const loginIfNot = async (ctx: CPMContext) => {
-    if (!ctx.secrets.token) {
-        const clientId = ctx.variables.clientId;
-        const clientSecret = ctx.variables.clientSecret;
-        ctx.secrets.token = await authCodeLogin(clientId, clientSecret);
+    if (!ctx.secrets.get('token')) {
+        const clientId = ctx.variables.get('clientId');
+        const clientSecret = ctx.variables.get('clientSecret');
+        const token = await authCodeLogin(clientId, clientSecret);
+        ctx.secrets.set('token', token);
     }
 }
 
@@ -78,16 +79,21 @@ const configure: Action = async (ctx, input) => {
     console.log(`To connect with ClickUp, follow guide at ${readmeUrl} to create OAuth app`);
     console.log(`Use ${chalk.blue(callbackUrl)} as the callback url when creating oauth app`)
 
-    const clientCred = await getClientCredential();
-    ctx.variables.clientId = clientCred.clientId;
-    ctx.variables.clientSecret = clientCred.clientSecret;
+    if (!ctx.variables.get('clientSecret')) {
+        const {clientId, clientSecret} = await getClientCredential();
+        ctx.variables.set('clientId', clientId);
+        ctx.variables.set('clientSecret', clientSecret);
 
-    delete ctx.secrets.token
-    await loginIfNot(ctx);
+        ctx.secrets.remove('token');
+        await loginIfNot(ctx);
+    }
 
-    ctx.variables.workspaceId = await selectWorkspace(ctx);
-    ctx.variables.spaceId = await selectSpace(ctx, ctx.variables.workspaceId);
-    ctx.variables.listId = await selectList(ctx, ctx.variables.spaceId);
+    const workspaceId = await selectWorkspace(ctx);
+    ctx.variables.set('workspaceId', workspaceId);
+    const spaceId = await selectSpace(ctx, workspaceId);
+    ctx.variables.set('spaceId', spaceId);
+    const listId = await selectList(ctx, spaceId);
+    ctx.variables.set('listId', listId);
 
     return {};
 }
@@ -95,14 +101,14 @@ const configure: Action = async (ctx, input) => {
 const getTasks = async (ctx: CPMContext, input: ActionInput) => {
     await loginIfNot(ctx);
 
-    const api = new ClickUpAPI(ctx.secrets.token);
+    const api = new ClickUpAPI(ctx.secrets.get('token'));
     let tasks;
 
     if (input.options.assigned) {
         const user = await api.getCurrentUser();
-        tasks = await api.getTasksInList(ctx.variables.listId, user.id);
+        tasks = await api.getTasksInList(ctx.variables.get('listId'), user.id);
     } else {
-        tasks = await api.getTasksInList(ctx.variables.listId);
+        tasks = await api.getTasksInList(ctx.variables.get('listId'));
     }
 
     return tasks;
@@ -129,7 +135,7 @@ const getTask: Action = async (ctx, input) => {
     await loginIfNot(ctx);
 
     const taskId = input.args.id;
-    const api = new ClickUpAPI(ctx.secrets.token);
+    const api = new ClickUpAPI(ctx.secrets.get('token'));
     const task = await api.getTask(taskId)
 
     console.log(`getting task for id = ${input.args.id}`);
@@ -167,7 +173,7 @@ const updateTaskStatus: Action = async (ctx, input) => {
     const taskId = input.args.id;
     const newStatus = input.args.status;
 
-    const api = new ClickUpAPI(ctx.secrets.token);
+    const api = new ClickUpAPI(ctx.secrets.get('token'));
     await api.updateTask(taskId, {
         status: newStatus
     })
