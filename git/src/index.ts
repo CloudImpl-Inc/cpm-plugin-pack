@@ -1,30 +1,24 @@
 import {CPMContext, ActionInput, ActionOutput, CPMPlugin, Action, CPMPluginCreator} from '@cloudimpl-inc/cpm';
-import * as path from 'path';
-import * as fs from 'fs';
 import {executeShellCommand} from "@cloudimpl-inc/cpm/dist/util";
 import chalk from 'chalk';
 import {execSync} from "child_process";
 
 const clone: Action = async (ctx: CPMContext, input: ActionInput): Promise<ActionOutput> => {
     const {url} = input.args;
+    const {destination} = input.options;
+
     try {
-        const [org, repo] = url.split('/').slice(-2).map((segment: string) => segment.replace('.git', ''));
-        const repoDir = path.join(ctx.config.rootDir, org, repo);
-
-        // Check if the repository is already cloned
-        if (fs.existsSync(repoDir)) {
-            console.log(chalk.yellow(`Repository already exists at ${repoDir}. Skipping clone step.`));
-            return {org, repo, path: repoDir};
-        }
-
         // Clone the repository
-        // @ts-ignore
-        await executeShellCommand(`git clone ${url} ${repoDir}`);
-        console.log(chalk.green(`Repository cloned successfully to ${repoDir}`));
-        return {org, repo, path: repoDir};
+        if (destination) {
+            await executeShellCommand(`git clone ${url} ${destination}`);
+        } else {
+            await executeShellCommand(`git clone ${url}`);
+        }
+        console.log(chalk.green('Repository cloned successfully'));
+        return {};
     } catch (error: any) {
         console.error('Error cloning repository:', error.message);
-        return {error: 'Failed to clone repository'};
+        return {};
     }
 };
 
